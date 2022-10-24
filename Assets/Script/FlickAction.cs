@@ -60,13 +60,10 @@ public class FlickAction : MonoBehaviour
 
     private void Update()
     {
-        //if(_battele.IsBattle)
-        //{
             if (_nowSwipe == FlickState.NONE)
             {
                 Flick();
             }
-        //}
 
 
     }
@@ -285,7 +282,8 @@ public class FlickAction : MonoBehaviour
         {
             if (enemy.gameObject.tag == "Enemy")
             {
-                _impulseSource.GenerateImpulse(new Vector3(0, 0, -1));
+                enemy.gameObject.GetComponent<Enemy>().GetDamage();
+                _impulseSource.GenerateImpulse();
             }
         }
     }
