@@ -177,7 +177,7 @@ public class FlickAction : MonoBehaviour
                 {
                     if(_animator)
                     {
-                        _animator.SetTrigger("Atack_Up");
+                        _animator.SetTrigger("Attack_Up");
 
                     }
 
@@ -189,7 +189,7 @@ public class FlickAction : MonoBehaviour
                 {
                     if (_animator)
                     {
-                        _animator.SetTrigger("Atack_Down");
+                        _animator.SetTrigger("Attack_Down");
 
                     }
                     StartCoroutine(StateReSet());
@@ -200,7 +200,7 @@ public class FlickAction : MonoBehaviour
                 {
                     if(_animator)
                     {
-                        _animator.SetTrigger("Atack_Right");
+                        _animator.SetTrigger("Attack_Right");
 
                     }
 
@@ -212,7 +212,7 @@ public class FlickAction : MonoBehaviour
                 {
                     if(_animator)
                     {
-                        _animator.SetTrigger("Atack_Left");
+                        _animator.SetTrigger("Attack_Left");
 
                     }
 
@@ -224,7 +224,7 @@ public class FlickAction : MonoBehaviour
                 {
                     if(_animator)
                     {
-                        _animator.SetTrigger("Atack_Tap");
+                        _animator.SetTrigger("Attack_Tap");
 
                     }
 
