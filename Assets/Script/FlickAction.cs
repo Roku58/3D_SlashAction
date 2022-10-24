@@ -1,21 +1,12 @@
 using UnityEngine;
 using System.Collections;
+using Cinemachine;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(LineRenderer))]
-
+[RequireComponent(typeof(CinemachineImpulseSource))]
 public class FlickAction : MonoBehaviour
 {
-
-    private Vector3 _touchStartPos;
-    private Vector3 _touchEndPos;
-
-    private Vector3 _lineStartPos;
-    private Vector3 _lineEndPos;
-
-    [SerializeField]
-
-
     public enum FlickState
     {
         NONE,
@@ -32,21 +23,39 @@ public class FlickAction : MonoBehaviour
 
     [SerializeField]
     float _stateReSetTime = 0.5f;
-
     [SerializeField]
     float _flickRange = 30f;
     [SerializeField]
+    float _speed;
+
+    private Vector3 _touchStartPos;
+    private Vector3 _touchEndPos;
+
+    private Vector3 _lineStartPos;
+    private Vector3 _lineEndPos;
+
+    GameObject _enemy;
+    GameObject _target;
     LineRenderer _line;
-
     Animator _animator;
+    CinemachineImpulseSource _impulseSource = default;
 
-    //[SerializeField]
-    //Battele _battele;
+
+    /// <summary>UŒ‚”ÍˆÍ‚Ì’†S</summary>
+    [SerializeField, Header("UŒ‚”ÍˆÍ‚Ì’†S")]
+    Vector3 _attackRangeCenter = default;
+    /// <summary>UŒ‚”ÍˆÍ‚Ì”¼Œa</summary>
+    [SerializeField, Header("UŒ‚”ÍˆÍ‚Ì”¼Œa")]
+    float _attackRangeRadius = 1f;
 
     private void Start()
     {
-        //_line = GetComponent<LineRenderer>();
+        _line = GetComponent<LineRenderer>();
         _animator = GetComponent<Animator>();
+        _enemy = GameObject.FindWithTag("Enemy");
+        _target = GameObject.FindWithTag("Target");
+        _impulseSource = GetComponent<CinemachineImpulseSource>();
+
     }
 
     private void Update()
@@ -247,4 +256,45 @@ public class FlickAction : MonoBehaviour
             ChangeState(FlickState.NONE);
         }
     }
+
+    void OnDrawGizmosSelected()
+    {
+        // UŒ‚”ÍˆÍ‚ğÔ‚¢ü‚ÅƒV[ƒ“ƒrƒ…[‚É•\¦‚·‚é
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(GetAttackRangeCenter(), _attackRangeRadius);
+    }
+
+    /// <summary>
+    /// UŒ‚”ÍˆÍ‚Ì’†S‚ğŒvZ‚µ‚Äæ“¾‚·‚é
+    /// </summary>
+    /// <returns>UŒ‚”ÍˆÍ‚Ì’†SÀ•W</returns>
+    Vector3 GetAttackRangeCenter()
+    {
+        Vector3 center = this.transform.position + this.transform.forward * _attackRangeCenter.z
+            + this.transform.up * _attackRangeCenter.y
+            + this.transform.right * _attackRangeCenter.x;
+        return center;
+    }
+
+    void Attack()
+    {
+        // UŒ‚”ÍˆÍ‚É“ü‚Á‚Ä‚¢‚éƒRƒ‰ƒCƒ_[‚ğæ“¾‚·‚é
+        var hitObj = Physics.OverlapSphere(GetAttackRangeCenter(), _attackRangeRadius);
+
+        foreach (Collider enemy in hitObj)
+        {
+            if (enemy.gameObject.tag == "Enemy")
+            {
+                _impulseSource.GenerateImpulse(new Vector3(0, 0, -1));
+            }
+        }
+    }
+
+
+    void TargetMove()
+    {
+        this.transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, _speed * Time.deltaTime);
+    }
+
+
 }
