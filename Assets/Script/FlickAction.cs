@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(LineRenderer))]
+
 public class FlickAction : MonoBehaviour
 {
 
@@ -32,7 +35,6 @@ public class FlickAction : MonoBehaviour
 
     [SerializeField]
     float _flickRange = 30f;
-
     [SerializeField]
     LineRenderer _line;
 
@@ -43,6 +45,7 @@ public class FlickAction : MonoBehaviour
 
     private void Start()
     {
+        //_line = GetComponent<LineRenderer>();
         _animator = GetComponent<Animator>();
     }
 
@@ -77,15 +80,15 @@ public class FlickAction : MonoBehaviour
             _lineStartPos.z = 0;
             _lineEndPos.z = 0;
 
-            //Debug.Log(_lineStartPos);
-            //Debug.Log(_lineEndPos);
+            //Debug.Log(_touchStartPos);
+            //Debug.Log(_touchEndPos);
 
             if (_nowSwipe == FlickState.NONE)
             {
                 _line.enabled = true;
 
-                _line.SetPosition(0, _lineStartPos);
-                _line.SetPosition(1, _lineEndPos);
+                _line.SetPosition(0, _touchStartPos);
+                _line.SetPosition(1, _touchEndPos);
             }
 
         }
@@ -96,7 +99,7 @@ public class FlickAction : MonoBehaviour
 
             _lineEndPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             _lineEndPos.z = 0;
-            _line.SetPosition(1, _lineEndPos);
+            _line.SetPosition(1, _touchEndPos);
 
             GetDirection();
         }
@@ -146,8 +149,7 @@ public class FlickAction : MonoBehaviour
         else
         {
             //タッチを検出
-            Direction = "touch";
-            Debug.Log(Direction);
+            ChangeState(FlickState.TAP);
         }
 
 
@@ -163,7 +165,7 @@ public class FlickAction : MonoBehaviour
         var prev = _nowSwipe;
         // 次の状態に変更する
         _nowSwipe = next;
-        Debug.Log($"フリック方向 {prev} -> {next}");
+        //Debug.Log($"フリック方向 {prev} -> {next}");
         switch (_nowSwipe)
         {
             case FlickState.NONE:
