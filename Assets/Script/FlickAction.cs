@@ -27,6 +27,11 @@ public class FlickAction : MonoBehaviour
     float _flickRange = 30f;
     [SerializeField]
     float _speed;
+    [SerializeField]
+    float _playTime;
+
+    [SerializeField]
+    GameObject[] _effects;
 
     private Vector3 _touchStartPos;
     private Vector3 _touchEndPos;
@@ -39,6 +44,8 @@ public class FlickAction : MonoBehaviour
     LineRenderer _line;
     Animator _animator;
     CinemachineImpulseSource _impulseSource = default;
+
+    TimeManager _timeManager;
 
 
     /// <summary>çUåÇîÕàÕÇÃíÜêS</summary>
@@ -55,6 +62,7 @@ public class FlickAction : MonoBehaviour
         _enemy = GameObject.FindWithTag("Enemy");
         _target = GameObject.FindWithTag("Target");
         _impulseSource = GetComponent<CinemachineImpulseSource>();
+        _timeManager = GetComponent<TimeManager>();
 
     }
 
@@ -283,6 +291,7 @@ public class FlickAction : MonoBehaviour
             if (enemy.gameObject.tag == "Enemy")
             {
                 enemy.gameObject.GetComponent<Enemy>().GetDamage();
+                _timeManager.SlowDown();
                 _impulseSource.GenerateImpulse();
             }
         }
@@ -294,5 +303,12 @@ public class FlickAction : MonoBehaviour
         this.transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, _speed * Time.deltaTime);
     }
 
+    IEnumerator EffectsPlay(int number)
+    {
+        _effects[number].SetActive(true);
+        yield return new WaitForSeconds(_playTime);
+        _effects[number].SetActive(false);
+
+    }
 
 }
